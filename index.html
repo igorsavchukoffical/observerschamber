@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Observer’s Chamber</title>
+    <meta name="description" content="A quiet archive of short thoughts." />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08080a" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080a'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%23e8e4db' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body id="top">
+    <script>
+      const thoughts = [
+        [
+          "the combination of social novelty and minimized social approval maintains psychological satisfaction",
+        ],
+        ["fixate on your objectives, but remain egoless"],
+        [
+          "peak cognitive power is constrained to 4-5 hours of active analytical engagement",
+        ],
+        ["don't live by clock, live by constructive neurological inclination"],
+        [
+          "something outght to be done about the average VC ecosystem favoring pooling founder candidates exclusively from a small list of privately held prestigious institutions",
+        ],
+        ["all ideas are nuanced"],
+        [
+          "ego is a psychological obstacle that damages the clarity of one's true destination",
+        ],
+        [
+          "the prioritization of social validation is a necessary prerequisite for ego development. Therefore, by minimizing the presence of one, you organically minimize the existence of the other",
+        ],
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const list = document.getElementById("thoughts");
+        if (!list) return;
+
+        const format = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        });
+
+        const now = new Date();
+        const pad = (value) => String(value).padStart(2, "0");
+        const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+        [...thoughts]
+          .map(([text, iso]) => [text, iso || today])
+          .sort((a, b) => b[1].localeCompare(a[1]))
+          .forEach(([text, iso], index) => {
+            const item = document.createElement("li");
+            item.className = "thought";
+            item.style.setProperty("--i", index);
+
+            const line = document.createElement("p");
+            line.className = "line";
+            line.textContent = text;
+
+            const date = document.createElement("time");
+            date.className = "date";
+            date.dateTime = iso;
+
+            const parsed = new Date(`${iso}T12:00:00`);
+            date.textContent = Number.isNaN(parsed.getTime())
+              ? iso
+              : format.format(parsed);
+
+            item.append(line, date);
+            list.append(item);
+          });
+      });
+    </script>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <span class="wordmark">Observer’s Chamber</span>
+        <span class="byline">by Igor Savchuk</span>
+      </div>
+    </header>
+
+    <main class="chamber">
+      <ul class="thoughts" id="thoughts" aria-label="Thoughts"></ul>
+      <noscript>
+        <p class="no-script">Enable JavaScript to view the archive.</p>
+      </noscript>
+    </main>
+
+    <a class="to-top" href="#top" aria-label="Back to top">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 19V5" />
+        <path d="m5 12 7-7 7 7" />
+      </svg>
+    </a>
+  </body>
+</html>
