@@ -16,31 +16,121 @@
 
   <body id="top">
     <script>
+      /* ── Your thoughts ──────────────────────────────────────────
+         Each thought is a title, its date, and the microessay that
+         opens when the title is clicked.
+
+           {
+             title: "A new thought.",
+             date: "2026-11-27",
+             essay: [
+               "The first paragraph.",
+               "The second paragraph.",
+             ],
+           },
+
+         Order doesn't matter — newest is shown first automatically. */
       const thoughts = [
-        ["think about who you can realistically become, not who you dream to become"],
-        [
-          "the combination of social novelty and minimized social approval maintains psychological satisfaction",
-        ],
-        ["fixate on your objectives, but remain egoless"],
-        [
-          "peak cognitive power is constrained to 4-5 hours of active analytical engagement",
-        ],
-        ["don't live by clock, live by constructive neurological inclination"],
-        [
-          "something outght to be done about the average VC ecosystem favoring pooling founder candidates exclusively from a small list of privately held prestigious institutions",
-        ],
-        ["all ideas are nuanced"],
-        [
-          "ego is a psychological obstacle that damages the clarity of one's true destination",
-        ],
-        [
-          "the prioritization of social validation is a necessary prerequisite for ego development. Therefore, by minimizing the presence of one, you are organically minimizing the existence of the other",
-        ],
+        {
+          title:
+            "think about who you can realistically become, not who you dream to become",
+          date: "2026-11-26",
+          essay: [
+            "Dreams are cheap to hold because they never ask anything of you. They live at a distance, and the distance is what makes them feel safe.",
+            "The realistic version of yourself is closer and harder to look at. It is built from what you actually do on an ordinary Tuesday: the hours you protect, the people you keep, the work you finish when no one is watching.",
+            "Aim at that person. Not the fantasy, but the one your current habits are already producing. Then change the habits. The dream may follow or it may not. The realistic self is the one you have to live in.",
+          ],
+        },
+        {
+          title:
+            "the combination of social novelty and minimized social approval maintains psychological satisfaction",
+          date: "2026-11-25",
+          essay: [
+            "Novelty keeps the mind awake. Approval keeps it anxious. The first is renewable. The second compounds like debt.",
+            "What stays satisfying over time is contact with new people, new rooms, new ideas, while caring very little what those rooms decide about you. You get the stimulation without the audit.",
+            "The trick is not to withdraw. Withdrawal kills novelty. The trick is to stay close and remain unsponsored: interested in everyone, owned by no one.",
+          ],
+        },
+        {
+          title: "fixate on your objectives, but remain egoless",
+          date: "2026-11-25",
+          essay: [
+            "Fixation and ego can look identical from the outside. Both produce long hours, refusal, intensity. They are different engines.",
+            "The ego needs to be seen winning. That need distorts the work. It favors visible progress, arguments you can win, credit you can claim. The objective only needs to be reached.",
+            "Hold the goal tightly and yourself loosely. Be willing to be wrong in public, to be replaced, to watch your idea become better in someone else’s hands. The work is the point. You are only the current instrument.",
+          ],
+        },
+        {
+          title:
+            "peak cognitive power is constrained to 4-5 hours of active analytical engagement",
+          date: "2026-11-25",
+          essay: [
+            "Attention is less like a muscle than a battery with a narrow window. For four or five hours, complex thought is nearly effortless: connections form, problems hold their shape. After that, the same work costs twice as much and yields half as much.",
+            "Most people spend those hours before they notice them. Messages, other people’s priorities, the pleasant feeling of being busy.",
+            "Protect the window. Give it to the one problem that would change the week if it moved. The rest of the day can absorb everything else. It usually does.",
+          ],
+        },
+        {
+          title:
+            "don't live by clock, live by constructive neurological inclination",
+          date: "2026-11-25",
+          essay: [
+            "The clock is a coordination tool, not a source of meaning. It tells you when to meet someone. It cannot tell you when your mind is ready to do the thing you were supposed to do.",
+            "Sometimes the work opens at nine in the morning. Sometimes it opens at two. Sometimes it opens on a walk, in a shower, in a conversation that has nothing to do with it.",
+            "Live by the opening. Answer when the mind inclines toward construction, and rest when it does not. The clock will still be there when you look up. It should not be the thing that decides.",
+          ],
+        },
+        {
+          title:
+            "something outght to be done about the average VC ecosystem favoring pooling founder candidates exclusively from a small list of privately held prestigious institutions",
+          date: "2026-11-25",
+          essay: [
+            "The problem is not that prestigious institutions produce bad founders. Some of them are excellent. The problem is that the filter is cheap, and its output is mistaken for a signal.",
+            "Pooling candidates from a short list of universities is efficient for the people doing the pooling. It lowers their search cost, gives them a shared vocabulary, and gives their decisions cover. No one is blamed for the pattern. But efficiency for the investor becomes narrowing for everyone else. Talent that did not buy the credential never enters the sample, and the sample slowly becomes the definition.",
+            "What should be done is unglamorous. Open the top of the funnel beyond the list. Fund people earlier and in more places. Judge founders by what they build rather than where they were admitted. Until the search changes, the ecosystem will keep finding the same person in different bodies and calling it a pattern.",
+          ],
+        },
+        {
+          title: "all ideas are nuanced",
+          date: "2026-11-25",
+          essay: [
+            "Every belief is true from somewhere and false from somewhere else. The point is not that all beliefs are equal. The point is to become slower about closing a sentence.",
+            "The useful question is what a claim is true for: which scale, which person, which moment, which cost it ignores. That usually reveals a real trade-off instead of a winner.",
+            "Certainty is convenient, but it is often just a refusal to specify the conditions. Nuance is not the absence of a view. It is a view that knows where it lives.",
+          ],
+        },
+        {
+          title:
+            "ego is a psychological obstacle that damages the clarity of one's true destination",
+          date: "2026-11-25",
+          essay: [
+            "The ego is not a confidence problem. It is a clarity problem. It inserts a second question into every situation — what does this say about me — and that question distorts the answer to the first.",
+            "When the ego is loud, destinations are chosen for their reflection value. You take the job that sounds impressive, the argument you can win, the version of the work that gets seen. The true destination becomes harder to find because it is no longer the one you are looking for.",
+            "Clarity returns when the self leaves the room. What remains is the work, the direction, and the small honest next step.",
+          ],
+        },
+        {
+          title:
+            "the prioritization of social validation is a necessary prerequisite for ego development. Therefore, by minimizing the presence of one, you are organically minimizing the existence of the other",
+          date: "2026-11-25",
+          essay: [
+            "An ego is not born whole. It is assembled early from mirroring: you learn that you exist as a bounded self by watching other people respond to you. At that stage, social validation is not vanity. It is a scaffold.",
+            "The error is to keep using the scaffold after the building is finished. Approval becomes the thing you optimize for rather than the thing that once helped you form. The self that was built is then maintained by other people’s reactions instead of its own direction.",
+            "Minimize the validation, then, and you do not destroy the self. You let it settle into something that no longer needs an audience to know what it is. What remains is an ego that can be quiet because it has already been formed.",
+          ],
+        },
       ];
 
       document.addEventListener("DOMContentLoaded", () => {
         const list = document.getElementById("thoughts");
-        if (!list) return;
+        const dialog = document.getElementById("essay-dialog");
+        if (!list || !dialog) return;
+
+        const titleEl = document.getElementById("essay-title");
+        const dateEl = document.getElementById("essay-date");
+        const bodyEl = document.getElementById("essay-body");
+        const scrollEl = dialog.querySelector(".essay-scroll");
+        const closeButton = dialog.querySelector(".essay-close");
 
         const format = new Intl.DateTimeFormat("en-US", {
           month: "short",
@@ -48,32 +138,75 @@
           year: "numeric",
         });
 
-        const now = new Date();
-        const pad = (value) => String(value).padStart(2, "0");
-        const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+        const formatDate = (iso) => {
+          if (!iso) return "—";
+
+          const parsed = new Date(`${iso}T12:00:00`);
+          return Number.isNaN(parsed.getTime()) ? iso : format.format(parsed);
+        };
+
+        let lastTrigger = null;
+
+        const openEssay = (thought, trigger) => {
+          lastTrigger = trigger;
+
+          titleEl.textContent = thought.title;
+          dateEl.dateTime = thought.date || "";
+          dateEl.textContent = formatDate(thought.date);
+          bodyEl.replaceChildren(
+            ...(thought.essay || []).map((paragraph) => {
+              const p = document.createElement("p");
+              p.textContent = paragraph;
+              return p;
+            }),
+          );
+
+          dialog.showModal();
+          scrollEl.scrollTop = 0;
+          document.documentElement.classList.add("dialog-open");
+        };
+
+        closeButton.addEventListener("click", () => dialog.close());
+
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+
+        dialog.addEventListener("close", () => {
+          document.documentElement.classList.remove("dialog-open");
+          if (lastTrigger) lastTrigger.focus({ preventScroll: true });
+          lastTrigger = null;
+        });
 
         [...thoughts]
-          .map(([text, iso]) => [text, iso || today])
-          .sort((a, b) => b[1].localeCompare(a[1]))
-          .forEach(([text, iso], index) => {
+          .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
+          .forEach((thought, index) => {
+            if (!thought.date) {
+              console.warn(`Missing date for thought: ${thought.title}`);
+            }
+
             const item = document.createElement("li");
             item.className = "thought";
             item.style.setProperty("--i", index);
 
-            const line = document.createElement("p");
+            const trigger = document.createElement("button");
+            trigger.type = "button";
+            trigger.className = "thought-trigger";
+            trigger.setAttribute("aria-haspopup", "dialog");
+            trigger.setAttribute("aria-controls", "essay-dialog");
+
+            const line = document.createElement("span");
             line.className = "line";
-            line.textContent = text;
+            line.textContent = thought.title;
 
             const date = document.createElement("time");
             date.className = "date";
-            date.dateTime = iso;
+            if (thought.date) date.dateTime = thought.date;
+            date.textContent = formatDate(thought.date);
 
-            const parsed = new Date(`${iso}T12:00:00`);
-            date.textContent = Number.isNaN(parsed.getTime())
-              ? iso
-              : format.format(parsed);
-
-            item.append(line, date);
+            trigger.append(line, date);
+            trigger.addEventListener("click", () => openEssay(thought, trigger));
+            item.append(trigger);
             list.append(item);
           });
       });
@@ -92,6 +225,37 @@
         <p class="no-script">Enable JavaScript to view the archive.</p>
       </noscript>
     </main>
+
+    <dialog
+      class="essay-dialog"
+      id="essay-dialog"
+      aria-labelledby="essay-title"
+    >
+      <article class="essay">
+        <div class="essay-head">
+          <time class="essay-date" id="essay-date"></time>
+          <button class="essay-close" type="button" aria-label="Close essay">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="essay-scroll">
+          <div class="essay-content">
+            <h2 class="essay-title" id="essay-title"></h2>
+            <div class="essay-body" id="essay-body"></div>
+          </div>
+        </div>
+      </article>
+    </dialog>
 
     <a class="to-top" href="#top" aria-label="Back to top">
       <svg
