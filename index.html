@@ -20,7 +20,11 @@
         {
           title: "rational iconoclasm deserves admiration",
           date: "2026-11-26",
-          essay: [""],
+          essay: [
+            "For instance, challenging a commonly supported establishment that has been shown to be harmful to its opponents as well as to its proponents, and whose state is preserved as it is by its authority figures, because keeping it benefits those figures in some ways.",
+            "As an iconoclast in this scenario, you might want to supersede the mechanisms that make it harmful, if not replace the establishment itself, but by doing so, you may be faced with genuine ideological and establishment-funded pushback in the form of targeted negative media coverage, as an example, with the aim of sabotaging your reputation and damaging the chances of you successfully engaging more individuals in your cause, which is only one of the many ways that the establishment and its supporters may respond to you contradicting their shared reality.",
+            "Therefore, the more powerful the establishment, the riskier it is for someone to rebel against it, and those who do are sufficiently committed to the notion that they've already accepted the risks associated with doing so, and this, from my perspective, naturally positions those human beings as uniquely brave and worthy of respect.",
+          ],
         },
         {
           title:
@@ -233,12 +237,14 @@
         const setActiveMonth = (month) => {
           activeMonth = activeMonth === month ? "" : month;
 
-          archiveList.querySelectorAll(".archive-entry").forEach((entry) =>
-            entry.setAttribute(
-              "aria-pressed",
-              String(entry.dataset.month === activeMonth),
-            ),
-          );
+          archiveList
+            .querySelectorAll(".archive-entry")
+            .forEach((entry) =>
+              entry.setAttribute(
+                "aria-pressed",
+                String(entry.dataset.month === activeMonth),
+              ),
+            );
 
           applyFilter();
         };
@@ -262,9 +268,7 @@
             count.textContent = ` (${month.count})`;
 
             button.append(label, count);
-            button.addEventListener("click", () =>
-              setActiveMonth(month.key),
-            );
+            button.addEventListener("click", () => setActiveMonth(month.key));
             item.append(button);
             archiveList.append(item);
           });
