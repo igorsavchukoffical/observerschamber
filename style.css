@@ -169,9 +169,77 @@ body::after {
 
 /* ── Chamber ──────────────────────────────────────────────── */
 .chamber {
-  max-width: var(--measure);
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) minmax(0, var(--measure))
+    minmax(0, 1fr);
+  max-width: 72rem;
   margin: 0 auto;
-  padding: clamp(5rem, 15vh, 9.5rem) var(--gutter) clamp(7rem, 18vh, 12rem);
+  padding: clamp(5rem, 15vh, 9.5rem) 0 clamp(7rem, 18vh, 12rem);
+}
+
+.chamber-content {
+  grid-column: 2;
+  min-width: 0;
+  padding-inline: var(--gutter);
+}
+
+.archive {
+  position: sticky;
+  top: 7.25rem;
+  grid-column: 1;
+  align-self: start;
+  justify-self: end;
+  max-width: 14rem;
+  padding-right: clamp(0.85rem, 2.2vw, 1.75rem);
+  text-align: right;
+}
+
+.archive-title {
+  margin: 0 0 1.05rem;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.archive-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archive-entry {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.35s var(--ease);
+}
+
+.archive-entry:hover {
+  color: var(--ink-soft);
+}
+
+.archive-entry[aria-pressed="true"] {
+  color: var(--ink);
 }
 
 .thoughts {
@@ -630,6 +698,40 @@ body::after {
   }
 }
 
+/* ── Compact layout ───────────────────────────────────────── */
+@media (max-width: 64rem) {
+  .chamber {
+    display: block;
+    max-width: var(--measure);
+    padding-inline: var(--gutter);
+  }
+
+  .chamber-content {
+    padding-inline: 0;
+  }
+
+  .archive {
+    position: static;
+    width: 100%;
+    max-width: none;
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+    padding-right: 0;
+    text-align: left;
+    justify-self: stretch;
+  }
+
+  .archive-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 1.4rem;
+  }
+
+  .archive-entry {
+    text-align: left;
+  }
+}
+
 /* ── Small screens ────────────────────────────────────────── */
 @media (max-width: 620px) {
   .masthead {
@@ -702,14 +804,20 @@ body::after {
 
   body::after,
   .masthead,
+  .archive,
   .essay-dialog,
   .to-top {
     display: none;
   }
 
   .chamber {
+    display: block;
     padding-top: 0;
     max-width: none;
+  }
+
+  .chamber-content {
+    padding-inline: 0;
   }
 
   .line {

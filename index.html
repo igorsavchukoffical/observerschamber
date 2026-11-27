@@ -91,6 +91,8 @@
         const clearEl = document.getElementById("thought-search-clear");
         const statusEl = document.getElementById("search-status");
         const emptyEl = document.getElementById("search-empty");
+        const archiveEl = document.querySelector(".archive");
+        const archiveList = document.getElementById("archive-list");
 
         const format = new Intl.DateTimeFormat("en-US", {
           month: "short",
@@ -103,6 +105,17 @@
 
           const parsed = new Date(`${iso}T12:00:00`);
           return Number.isNaN(parsed.getTime()) ? iso : format.format(parsed);
+        };
+
+        const monthFormat = new Intl.DateTimeFormat("en-US", {
+          month: "long",
+        });
+
+        const formatMonth = (iso) => {
+          const parsed = new Date(`${iso.slice(0, 7)}-01T12:00:00`);
+          return Number.isNaN(parsed.getTime())
+            ? iso.slice(0, 7)
+            : `${monthFormat.format(parsed)}, ${parsed.getFullYear()}`;
         };
 
         const normalize = (value) => value.toLowerCase().replace(/[’‘]/g, "'");
@@ -141,12 +154,25 @@
         });
 
         const rows = [];
+        const months = new Map();
 
         [...thoughts]
           .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
           .forEach((thought, index) => {
             if (!thought.date) {
               console.warn(`Missing date for thought: ${thought.title}`);
+            }
+
+            const month = thought.date ? thought.date.slice(0, 7) : "";
+
+            if (month) {
+              const entry = months.get(month) || {
+                key: month,
+                label: formatMonth(thought.date),
+                count: 0,
+              };
+              entry.count += 1;
+              months.set(month, entry);
             }
 
             const item = document.createElement("li");
@@ -174,47 +200,90 @@
             );
             item.append(trigger);
             list.append(item);
-            rows.push({ item, title: normalize(thought.title) });
+            rows.push({ item, title: normalize(thought.title), month });
           });
 
-        if (searchInput && countEl && clearEl && statusEl && emptyEl) {
-          const applyFilter = () => {
-            const terms = normalize(searchInput.value)
-              .trim()
-              .split(/\s+/)
-              .filter(Boolean);
-            const active = terms.length > 0;
-            let matches = 0;
+        let activeMonth = "";
 
-            rows.forEach(({ item, title }) => {
-              const match = terms.every((term) => title.includes(term));
-              item.hidden = !match;
-              if (match) matches += 1;
-            });
+        const applyFilter = () => {
+          const terms = normalize(searchInput.value)
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+          const filtering = activeMonth !== "" || terms.length > 0;
+          let matches = 0;
 
-            list.classList.add("has-filtered");
-            clearEl.hidden = searchInput.value.length === 0;
-            countEl.textContent = active ? `${matches} / ${rows.length}` : "";
-            emptyEl.hidden = !active || matches > 0;
-            statusEl.textContent = active
-              ? `${matches} thought${matches === 1 ? "" : "s"} found.`
-              : "";
-          };
-
-          searchInput.addEventListener("input", applyFilter);
-          searchInput.addEventListener("keydown", (event) => {
-            if (event.key === "Escape" && searchInput.value) {
-              event.preventDefault();
-              searchInput.value = "";
-              applyFilter();
-            }
+          rows.forEach(({ item, title, month }) => {
+            const match =
+              (!activeMonth || month === activeMonth) &&
+              terms.every((term) => title.includes(term));
+            item.hidden = !match;
+            if (match) matches += 1;
           });
-          clearEl.addEventListener("click", () => {
+
+          list.classList.add("has-filtered");
+          clearEl.hidden = searchInput.value.length === 0;
+          countEl.textContent = filtering ? `${matches} / ${rows.length}` : "";
+          emptyEl.hidden = !filtering || matches > 0;
+          statusEl.textContent = filtering
+            ? `${matches} thought${matches === 1 ? "" : "s"} found.`
+            : "";
+        };
+
+        const setActiveMonth = (month) => {
+          activeMonth = activeMonth === month ? "" : month;
+
+          archiveList.querySelectorAll(".archive-entry").forEach((entry) =>
+            entry.setAttribute(
+              "aria-pressed",
+              String(entry.dataset.month === activeMonth),
+            ),
+          );
+
+          applyFilter();
+        };
+
+        [...months.values()]
+          .sort((a, b) => b.key.localeCompare(a.key))
+          .forEach((month) => {
+            const item = document.createElement("li");
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "archive-entry";
+            button.dataset.month = month.key;
+            button.setAttribute("aria-pressed", "false");
+
+            const label = document.createElement("span");
+            label.className = "archive-label";
+            label.textContent = month.label;
+
+            const count = document.createElement("span");
+            count.className = "archive-count";
+            count.textContent = ` (${month.count})`;
+
+            button.append(label, count);
+            button.addEventListener("click", () =>
+              setActiveMonth(month.key),
+            );
+            item.append(button);
+            archiveList.append(item);
+          });
+
+        if (!months.size) archiveEl.hidden = true;
+
+        searchInput.addEventListener("input", applyFilter);
+        searchInput.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && searchInput.value) {
+            event.preventDefault();
             searchInput.value = "";
             applyFilter();
-            searchInput.focus();
-          });
-        }
+          }
+        });
+        clearEl.addEventListener("click", () => {
+          searchInput.value = "";
+          applyFilter();
+          searchInput.focus();
+        });
       });
     </script>
 
@@ -226,55 +295,66 @@
     </header>
 
     <main class="chamber">
-      <div class="thought-search" role="search">
-        <label class="visually-hidden" for="thought-search">
-          Search thoughts
-        </label>
-        <input
-          class="thought-search-input"
-          id="thought-search"
-          type="search"
-          placeholder="Search thoughts"
-          autocomplete="off"
-          spellcheck="false"
-          aria-controls="thoughts"
-        />
-        <span
-          class="thought-search-count"
-          id="thought-search-count"
-          aria-hidden="true"
-        ></span>
-        <button
-          class="thought-search-clear"
-          id="thought-search-clear"
-          type="button"
-          aria-label="Clear search"
-          hidden
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
-        </button>
-        <p
-          class="visually-hidden"
-          id="search-status"
-          role="status"
-          aria-live="polite"
-        ></p>
-      </div>
+      <aside class="archive" aria-labelledby="archive-title">
+        <h2 class="archive-title" id="archive-title">Thought Archive</h2>
+        <ul
+          class="archive-list"
+          id="archive-list"
+          aria-label="Filter thoughts by month"
+        ></ul>
+      </aside>
 
-      <ul class="thoughts" id="thoughts" aria-label="Thoughts"></ul>
-      <p class="search-empty" id="search-empty" hidden>No thoughts found.</p>
-      <noscript>
-        <p class="no-script">Enable JavaScript to view the archive.</p>
-      </noscript>
+      <div class="chamber-content">
+        <div class="thought-search" role="search">
+          <label class="visually-hidden" for="thought-search">
+            Search thoughts
+          </label>
+          <input
+            class="thought-search-input"
+            id="thought-search"
+            type="search"
+            placeholder="Search thoughts"
+            autocomplete="off"
+            spellcheck="false"
+            aria-controls="thoughts"
+          />
+          <span
+            class="thought-search-count"
+            id="thought-search-count"
+            aria-hidden="true"
+          ></span>
+          <button
+            class="thought-search-clear"
+            id="thought-search-clear"
+            type="button"
+            aria-label="Clear search"
+            hidden
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+          <p
+            class="visually-hidden"
+            id="search-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+
+        <ul class="thoughts" id="thoughts" aria-label="Thoughts"></ul>
+        <p class="search-empty" id="search-empty" hidden>No thoughts found.</p>
+        <noscript>
+          <p class="no-script">Enable JavaScript to view the archive.</p>
+        </noscript>
+      </div>
     </main>
 
     <dialog
