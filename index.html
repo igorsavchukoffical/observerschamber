@@ -17,9 +17,8 @@
   <body id="top">
     <script>
       const thoughts = [
-          {
-          title:
-            "rational iconoclasm deserves admiration",
+        {
+          title: "rational iconoclasm deserves admiration",
           date: "2026-11-26",
           essay: [""],
         },
@@ -87,6 +86,11 @@
         const bodyEl = document.getElementById("essay-body");
         const scrollEl = dialog.querySelector(".essay-scroll");
         const closeButton = dialog.querySelector(".essay-close");
+        const searchInput = document.getElementById("thought-search");
+        const countEl = document.getElementById("thought-search-count");
+        const clearEl = document.getElementById("thought-search-clear");
+        const statusEl = document.getElementById("search-status");
+        const emptyEl = document.getElementById("search-empty");
 
         const format = new Intl.DateTimeFormat("en-US", {
           month: "short",
@@ -100,6 +104,8 @@
           const parsed = new Date(`${iso}T12:00:00`);
           return Number.isNaN(parsed.getTime()) ? iso : format.format(parsed);
         };
+
+        const normalize = (value) => value.toLowerCase().replace(/[’‘]/g, "'");
 
         let lastTrigger = null;
 
@@ -134,6 +140,8 @@
           lastTrigger = null;
         });
 
+        const rows = [];
+
         [...thoughts]
           .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
           .forEach((thought, index) => {
@@ -166,7 +174,47 @@
             );
             item.append(trigger);
             list.append(item);
+            rows.push({ item, title: normalize(thought.title) });
           });
+
+        if (searchInput && countEl && clearEl && statusEl && emptyEl) {
+          const applyFilter = () => {
+            const terms = normalize(searchInput.value)
+              .trim()
+              .split(/\s+/)
+              .filter(Boolean);
+            const active = terms.length > 0;
+            let matches = 0;
+
+            rows.forEach(({ item, title }) => {
+              const match = terms.every((term) => title.includes(term));
+              item.hidden = !match;
+              if (match) matches += 1;
+            });
+
+            list.classList.add("has-filtered");
+            clearEl.hidden = searchInput.value.length === 0;
+            countEl.textContent = active ? `${matches} / ${rows.length}` : "";
+            emptyEl.hidden = !active || matches > 0;
+            statusEl.textContent = active
+              ? `${matches} thought${matches === 1 ? "" : "s"} found.`
+              : "";
+          };
+
+          searchInput.addEventListener("input", applyFilter);
+          searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && searchInput.value) {
+              event.preventDefault();
+              searchInput.value = "";
+              applyFilter();
+            }
+          });
+          clearEl.addEventListener("click", () => {
+            searchInput.value = "";
+            applyFilter();
+            searchInput.focus();
+          });
+        }
       });
     </script>
 
@@ -178,7 +226,52 @@
     </header>
 
     <main class="chamber">
+      <div class="thought-search" role="search">
+        <label class="visually-hidden" for="thought-search">
+          Search thoughts
+        </label>
+        <input
+          class="thought-search-input"
+          id="thought-search"
+          type="search"
+          placeholder="Search thoughts"
+          autocomplete="off"
+          spellcheck="false"
+          aria-controls="thoughts"
+        />
+        <span
+          class="thought-search-count"
+          id="thought-search-count"
+          aria-hidden="true"
+        ></span>
+        <button
+          class="thought-search-clear"
+          id="thought-search-clear"
+          type="button"
+          aria-label="Clear search"
+          hidden
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+        <p
+          class="visually-hidden"
+          id="search-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </div>
+
       <ul class="thoughts" id="thoughts" aria-label="Thoughts"></ul>
+      <p class="search-empty" id="search-empty" hidden>No thoughts found.</p>
       <noscript>
         <p class="no-script">Enable JavaScript to view the archive.</p>
       </noscript>
